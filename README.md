@@ -43,6 +43,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+ghcr.io/acrossorltd/atlas-git:alpine
 Dokcerfile based on alpine. SSH key is required as environment variable.
 It will:
 
@@ -52,9 +53,6 @@ It will:
 
 <!-- GETTING STARTED -->
 ## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 * To generate a new ssh key:
@@ -67,12 +65,61 @@ To get a local copy up and running follow these simple example steps.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+* Directly running with `docker`:
+  ```sh
+  docker run -ti --rm -e SSH_GIT_REPO="git@github.com:[domain]/[repo].git" -e SSH_PRIVATE_KEY="$(cat ./[rsa-key])" gitrepo migrate apply
+  ```
 
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-
-
+* Kubernetes(Init Containers)
+  ```yaml
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: github-ssh-key
+  type: kubernetes.io/ssh-auth
+  data:
+    # the data is abbreviated in this example
+    ssh-privatekey: |
+      MIIEpQIBAAKCAQEAulqb/Y ...
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: nginx-deployment
+    labels:
+      app: nginx
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: nginx
+    template:
+      metadata:
+        labels:
+          app: nginx
+      spec:
+        initContainers:
+        - name: migrate
+          image: ghcr.io/acrossorltd/atlas-git:alpine
+          imagePullPolicy: Always
+          args: ["migrate", "apply", "--url", "sqlite:///db/db.sqlite3"]
+          env:
+          - name: SSH_GIT_REPO
+            value: git@github.com:[domain]/[repo].git
+          - name: SSH_PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: github-ssh-key
+                key: ssh-privatekey
+          volumeMounts:
+          - name: db-mount
+            mountPath: "/db"
+        containers:
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+          - containerPort: 80
+  ```
 
 
 <!-- LICENSE -->
