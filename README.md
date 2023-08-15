@@ -132,7 +132,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-[Acorssor Dev](https://acrossor.com/your_username) - dev@acrossor.com
+[Acrossor Dev](https://acrossor.com/your_username) - dev@acrossor.com
 
 Project Link: [https://github.com/acrossorltd/atlas-git](https://github.com/acrossorltd/atlas-git)
 
