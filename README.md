@@ -43,8 +43,8 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-ghcr.io/acrossorltd/atlas-git:alpine
-Dokcerfile based on alpine. SSH key is required as environment variable.
+**ghcr.io/acrossorltd/atlas-git:alpine**
+Dokcerfile based on alpine. SSH key is required as an environment variable.
 It will:
 
 * clone the remote repo from ssh. migrations folder should be contained inside the repo. 
@@ -67,7 +67,7 @@ It will:
 
 * Directly running with `docker`:
   ```sh
-  docker run -ti --rm -e SSH_GIT_REPO="git@github.com:[domain]/[repo].git" -e SSH_PRIVATE_KEY="$(cat ./[rsa-key])" gitrepo migrate apply
+  docker run -ti --rm -e SSH_GIT_REPO="git@github.com:[domain]/[repo].git" -e SSH_PRIVATE_KEY="$(cat ./[rsa-key])" atlas-git:alpine migrate apply
   ```
 
 * Kubernetes(Init Containers)
